@@ -252,290 +252,11 @@ Article to Analyze: ${articleContent}`;
                 contents: [{ role: "user", parts: [{ text: prompt }] }],
                 generationConfig: {
                     responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "article_title": { "type": "STRING" },
-                            "evaluation_date": { "type": "STRING" },
-                            "criteria_evaluation": {
-                                "type": "OBJECT",
-                                "properties": {
-                                    "source_credibility": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "author_identifiable_reputable": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "publication_known_for_accuracy": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "url_legitimate": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "evidence_support": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "claims_backed_by_data": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "includes_expert_original_reporting": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "visual_aids_accurate_not_misleading": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "logic_reasoning": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "argument_clear_coherent": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "logical_fallacies_present": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "conclusions_justified_by_evidence": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "emotional_manipulation": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "exaggerated_language_fear_tactics": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "headlines_clickbaity_sensational": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "emotional_appeal_overrides_logic": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "bias_detection": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "perspective_balanced": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "opposing_views_represented_fairly": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "loaded_language_ideological_slant": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "language_tone": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "language_clear_professional": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "grammar_spelling_errors_present": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "tone_respectful_not_inflammatory": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "timeliness_relevance": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "content_current_up_to_date": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "accurately_reflects_latest_developments": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "relevant_to_topic_query": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "reproducibility_verifiability": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "claims_cross_referenced_reputable_sources": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "links_to_original_data_documentation": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "transparency_around_methodology": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "social_signals": {
-                                        "type": "OBJECT",
-                                        "properties": {
-                                            "comments_insightful_reactive": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "signs_of_coordinated_boosting": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            },
-                                            "content_shared_without_validation": {
-                                                "type": "OBJECT",
-                                                "properties": {
-                                                    "status": { "type": "STRING" },
-                                                    "explanation": { "type": "STRING" },
-                                                    "examples_from_article": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "overall_assessment": {
-                                "type": "OBJECT",
-                                "properties": {
-                                    "reliability": { "type": "STRING" },
-                                    "recommendations": { "type": "ARRAY", "items": { "type": "STRING" } }
-                                }
-                            }
-                        }
-                    }
+                    //responseSchema:                     
                 }
             };
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
 
             const response2 = await fetch(apiUrl, {
                 method: 'POST',
@@ -556,9 +277,20 @@ Article to Analyze: ${articleContent}`;
                 const jsonText = result.candidates[0].content.parts[0].text;
                 try {
                     const parsedJson = JSON.parse(jsonText);
-                    resultDisplay.value = JSON.stringify(parsedJson, null, 2);
+                    resultDisplay.style.display = "none"; // Hide textarea
+                    let prettyDiv = document.getElementById('prettyResult');
+                    if (!prettyDiv) {
+                        prettyDiv = document.createElement('div');
+                        prettyDiv.id = 'prettyResult';
+                        prettyDiv.style.marginTop = '1em';
+                        prettyDiv.style.maxHeight = '400px';
+                        prettyDiv.style.overflowY = 'auto';
+                        resultDisplay.parentNode.insertBefore(prettyDiv, resultDisplay.nextSibling);
+                    }
+                    prettyDiv.innerHTML = renderTabularEvaluation(parsedJson);
                     showMessage(messageDiv, 'Evaluation complete!', 'success');
                 } catch (parseError) {
+                    resultDisplay.style.display = "";
                     resultDisplay.value = `Error parsing JSON from API: ${parseError.message}\nRaw response:\n${jsonText}`;
                     showMessage(messageDiv, 'Error processing API response.', 'error');
                 }
@@ -591,5 +323,70 @@ Article to Analyze: ${articleContent}`;
         } else {
             element.classList.add('hidden');
         }
+    }
+
+    
+    function renderTabularEvaluation(data) {
+        if (!data) return "<div>No data to display.</div>";
+        let html = `
+            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-bold text-blue-700 mb-2">${data.article_title || "Untitled Article"}</h3>
+                <div class="text-sm text-gray-600 mb-2">Evaluated: ${data.evaluation_date || ""}</div>
+                <h4 class="font-semibold text-blue-600 mt-3 mb-1">Overall Assessment</h4>
+                <table class="min-w-full mb-3 text-sm">
+                    <tr>
+                        <td class="font-semibold pr-2">Reliability:</td>
+                        <td>${data.overall_assessment?.reliability || ""}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-semibold pr-2 align-top">Recommendations:</td>
+                        <td>
+                            <ul class="list-disc ml-6">
+                                ${(data.overall_assessment?.recommendations || []).map(r => `<li>${r}</li>`).join("")}
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+                <h4 class="font-semibold text-blue-600 mt-3 mb-1">Criteria Evaluation</h4>
+                ${renderCriteriaTables(data.criteria_evaluation)}
+            </div>
+        `;
+        return html;
+    }
+
+    function renderCriteriaTables(criteria) {
+        if (!criteria) return "";
+        let html = "";
+        for (const [section, sectionObj] of Object.entries(criteria)) {
+            html += `<div class="mb-4">
+                <div class="font-semibold text-gray-700 mb-1">${section.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
+                <table class="min-w-full text-xs border mb-2">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-1 border">Criterion</th>
+                            <th class="p-1 border">Status</th>
+                            <th class="p-1 border">Explanation</th>
+                            <th class="p-1 border">Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            for (const [criterion, critObj] of Object.entries(sectionObj)) {
+                html += `
+                    <tr>
+                        <td class="border p-1 font-medium">${criterion.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</td>
+                        <td class="border p-1">${critObj.status || ""}</td>
+                        <td class="border p-1">${critObj.explanation || ""}</td>
+                        <td class="border p-1">
+                            <ul class="list-disc ml-4">
+                                ${(critObj.examples_from_article || []).map(e => `<li>${e}</li>`).join("")}
+                            </ul>
+                        </td>
+                    </tr>
+                `;
+            }
+            html += `</tbody></table></div>`;
+        }
+        return html;
     }
 });
