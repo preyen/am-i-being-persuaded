@@ -312,87 +312,92 @@ Article to Analyze: ${articleContent}`;
     function renderTabularEvaluation(data) {
         if (!data) return "<div>No data to display.</div>";
         let reliability = (data.overall_assessment?.reliability || "N/A").toUpperCase();
-        let face = "🤖";
-        let statusColor = "#6b7280";
+        let face = "<span class='test-icon neutral'>●</span>";
+        let statusClass = "neutral";
         let statusText = reliability;
-        if (reliability.includes("HIGH")) { face = "🟢"; statusColor = "#22c55e"; statusText = data.overall_assessment?.reliability || "Highly Reliable"; }
-        else if (reliability.includes("MODERATE")) { face = "🟡"; statusColor = "#eab308"; statusText = data.overall_assessment?.reliability || "Moderately Reliable"; }
-        else if (reliability.includes("LOW")) { face = "🔴"; statusColor = "#ef4444"; statusText = data.overall_assessment?.reliability || "Low Reliability"; }
-        else if (reliability.includes("UNRELIABLE")) { face = "⚫"; statusColor = "#374151"; statusText = data.overall_assessment?.reliability || "Unreliable"; }
-        else if (reliability === "N/A") { face = "⚪"; statusColor = "#9ca3af"; statusText = "N/A"; }
+        if (reliability.includes("HIGH")) { face = "<span class='test-icon pass'>✔</span>"; statusClass = "pass"; statusText = data.overall_assessment?.reliability || "Highly Reliable"; }
+        else if (reliability.includes("MODERATE")) { face = "<span class='test-icon warn'>!</span>"; statusClass = "warn"; statusText = data.overall_assessment?.reliability || "Moderately Reliable"; }
+        else if (reliability.includes("LOW")) { face = "<span class='test-icon fail'>✖</span>"; statusClass = "fail"; statusText = data.overall_assessment?.reliability || "Low Reliability"; }
+        else if (reliability.includes("UNRELIABLE")) { face = "<span class='test-icon fail'>✖</span>"; statusClass = "fail"; statusText = data.overall_assessment?.reliability || "Unreliable"; }
+        else if (reliability === "N/A") { face = "<span class='test-icon neutral'>●</span>"; statusClass = "neutral"; statusText = "N/A"; }
         let recommendations = (data.overall_assessment?.recommendations || []);
         let html = `
             <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 class="text-lg font-bold text-blue-700 mb-2">${data.article_title || "Untitled Article"}</h3>
                 <div class="text-sm text-gray-600 mb-2">Evaluated: ${data.evaluation_date || ""}</div>
                 <h4 class="font-semibold text-blue-600 mt-3 mb-1">Overall Assessment</h4>
-                <div style="margin-bottom:1.5em;">
-                    <div class="robot-card" style="min-width:180px;max-width:260px;">
-                        <div class="robot-face" style="color:${statusColor}">${face}</div>
-                        <div class="robot-criterion">Reliability</div>
-                        <div class="robot-status" style="color:${statusColor}">${statusText}</div>
-                        <div class="robot-tooltip">
-                            <div><b>Recommendations:</b><ul style="margin:0 0 0 1.2em; padding:0;">${recommendations.map(r => `<li>${r}</li>`).join("")}</ul></div>
-                        </div>
+                <div class="test-row ${statusClass}" style="margin-bottom:1.5em;">
+                    <div class="test-row-main">
+                        ${face}
+                        <span class="test-row-title">Reliability</span>
+                        <span class="test-row-status ${statusClass}">${statusText}</span>
+                        <span class="test-row-chevron">&#9654;</span>
+                    </div>
+                    <div class="test-row-details">
+                        <div><b>Recommendations:</b><ul style="margin:0 0 0 1.2em; padding:0;">${recommendations.map(r => `<li>${r}</li>`).join("")}</ul></div>
                     </div>
                 </div>
                 <h4 class="font-semibold text-blue-600 mt-3 mb-1">Criteria Evaluation</h4>
                 ${renderCriteriaRobotCards(data.criteria_evaluation)}
             </div>
             <style>
-            .robot-card {
-                display: inline-block;
-                background: #f3f6fa;
-                border: 2px solid #d1d5db;
-                border-radius: 16px;
-                margin: 8px 8px 16px 0;
-                padding: 16px 12px 10px 12px;
-                min-width: 120px;
-                max-width: 180px;
-                vertical-align: top;
-                text-align: center;
-                box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
-                position: relative;
+            .test-row {
+                background: #f8fafc;
+                border: 1.5px solid #e5e7eb;
+                border-radius: 10px;
+                margin: 0 0 12px 0;
+                box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
                 transition: box-shadow 0.2s;
+                overflow: hidden;
             }
-            .robot-card:hover {
-                box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
+            .test-row-main {
+                display: flex;
+                align-items: center;
+                padding: 10px 16px;
+                cursor: pointer;
+                position: relative;
             }
-            .robot-face {
-                font-size: 2.2em;
-                margin-bottom: 0.2em;
+            .test-row-title {
+                font-weight: 600;
+                font-size: 1.08em;
+                margin-left: 10px;
+                flex: 1;
             }
-            .robot-status {
+            .test-row-status {
+                font-weight: 600;
+                margin-right: 10px;
+            }
+            .test-row-status.pass { color: #22c55e; }
+            .test-row-status.fail { color: #ef4444; }
+            .test-row-status.warn { color: #eab308; }
+            .test-row-status.neutral { color: #6b7280; }
+            .test-icon {
+                font-size: 1.3em;
+                width: 1.5em;
+                text-align: center;
+            }
+            .test-icon.pass { color: #22c55e; }
+            .test-icon.fail { color: #ef4444; }
+            .test-icon.warn { color: #eab308; }
+            .test-icon.neutral { color: #6b7280; }
+            .test-row-chevron {
                 font-size: 1.1em;
-                font-weight: bold;
-                margin-bottom: 0.2em;
+                color: #9ca3af;
+                margin-left: 6px;
+                transition: transform 0.2s;
             }
-            .robot-criterion {
-                font-size: 0.98em;
-                font-weight: 500;
-                margin-bottom: 0.2em;
+            .test-row-details {
+                background: #f1f5f9;
+                border-top: 1px solid #e5e7eb;
+                padding: 12px 18px 12px 38px;
+                font-size: 0.97em;
+                display: none;
             }
-            .robot-tooltip {
-                visibility: hidden;
-                width: 260px;
-                background: #222;
-                color: #fff;
-                text-align: left;
-                border-radius: 8px;
-                padding: 10px 14px;
-                position: absolute;
-                z-index: 10;
-                left: 50%;
-                top: 110%;
-                transform: translateX(-50%);
-                opacity: 0;
-                transition: opacity 0.2s;
-                font-size: 0.93em;
-                box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+            .test-row:hover .test-row-details, .test-row:focus-within .test-row-details {
+                display: block;
             }
-            .robot-card:hover .robot-tooltip {
-                visibility: visible;
-                opacity: 1;
+            .test-row:hover .test-row-chevron, .test-row:focus-within .test-row-chevron {
+                transform: rotate(90deg);
             }
             .robot-section-title {
                 font-size: 1.08em;
@@ -411,28 +416,29 @@ Article to Analyze: ${articleContent}`;
         let html = "";
         for (const [section, sectionObj] of Object.entries(criteria)) {
             html += `<div class="robot-section-title">${section.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>`;
-            html += `<div style="display:flex; flex-wrap:wrap; gap:8px 0;">`;
             for (const [criterion, critObj] of Object.entries(sectionObj)) {
                 let status = (critObj.status || "N/A").toUpperCase();
-                let face = "🤖";
-                let statusColor = "#6b7280";
+                let face = "<span class='test-icon neutral'>●</span>";
+                let statusClass = "neutral";
                 let statusText = status;
-                if (status === "YES") { face = "🟢"; statusColor = "#22c55e"; statusText = "Yes"; }
-                else if (status === "NO") { face = "🔴"; statusColor = "#ef4444"; statusText = "No"; }
-                else if (status === "N/A") { face = "⚪"; statusColor = "#9ca3af"; statusText = "N/A"; }
+                if (status === "YES") { face = "<span class='test-icon pass'>✔</span>"; statusClass = "pass"; statusText = "Yes"; }
+                else if (status === "NO") { face = "<span class='test-icon fail'>✖</span>"; statusClass = "fail"; statusText = "No"; }
+                else if (status === "N/A") { face = "<span class='test-icon neutral'>●</span>"; statusClass = "neutral"; statusText = "N/A"; }
                 html += `
-                    <div class="robot-card">
-                        <div class="robot-face" style="color:${statusColor}">${face}</div>
-                        <div class="robot-criterion">${criterion.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
-                        <div class="robot-status" style="color:${statusColor}">${statusText}</div>
-                        <div class="robot-tooltip">
+                    <div class="test-row ${statusClass}">
+                        <div class="test-row-main">
+                            ${face}
+                            <span class="test-row-title">${criterion.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                            <span class="test-row-status ${statusClass}">${statusText}</span>
+                            <span class="test-row-chevron">&#9654;</span>
+                        </div>
+                        <div class="test-row-details">
                             <div><b>Explanation:</b> ${critObj.explanation || "<i>No explanation.</i>"}</div>
                             <div style="margin-top:0.5em;"><b>Examples:</b><ul style="margin:0 0 0 1.2em; padding:0;">${(critObj.examples_from_article || []).map(e => `<li>${e}</li>`).join("")}</ul></div>
                         </div>
                     </div>
                 `;
             }
-            html += `</div>`;
         }
         return html;
     }
