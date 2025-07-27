@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Article Misinformation Evaluator",
+  "name": "Am I Being Persuaded",
   "version": "1.0",
   "description": "Evaluates article content for misinformation, bias, and logical flaws using the Gemini API.",
   "permissions": [
