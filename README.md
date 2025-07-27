@@ -1,4 +1,4 @@
-# Article Misinformation Evaluator Chrome Extension
+# Am I Being Persuaded?
 
 This Chrome Extension helps users critically evaluate articles for potential misinformation, bias, and logical flaws directly within their browser. It leverages the Google Gemini API to analyze the content of the currently viewed webpage against a comprehensive checklist derived from the book "Foolproof: Why Misinformation Infects Our Minds and How to Build Immunity."
 
