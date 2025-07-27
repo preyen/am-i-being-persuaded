@@ -1,0 +1,22 @@
+{
+  "name": "am-i-being-persuaded",
+  "version": "1.0.0",
+  "description": "A chrome extension to evaulation news articles against the criteria set out in Foolproof",
+  "main": "content.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Preyen Nair",
+  "license": "MIT",
+  "dpendencies": {},
+  "devDependencies": {
+    "copy-webpack-plugin": "^13.0.0",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@google/genai": "^1.11.0",
+    "@google/generative-ai": "^0.24.1"
+  }
+}
