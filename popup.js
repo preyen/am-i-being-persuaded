@@ -123,7 +123,7 @@ JSON
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
       },
-      "logical_fallacies_present": {
+      "no_logical_fallacies_present": {
         "status": "Yes/No/N/A",
         "explanation": "Identify specific fallacies and brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
@@ -135,17 +135,17 @@ JSON
       }
     },
     "emotional_manipulation": {
-      "exaggerated_language_fear_tactics": {
+      "no_exaggerated_language_or_fear_tactics": {
         "status": "Yes/No/N/A",
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
       },
-      "headlines_clickbaity_sensational": {
+      "headlines_not_clickbaity_sensational": {
         "status": "Yes/No/N/A",
         "explanation": "Brief explanation, quote headline.",
         "examples_from_article": ["Example 1", "Example 2"]
       },
-      "emotional_appeal_overrides_logic": {
+      "emotional_appeal_doesnt_override_logic": {
         "status": "Yes/No/N/A",
         "explanation": "Brief explanation of how emotions are targeted.",
         "examples_from_article": ["Example 1", "Example 2"]
@@ -162,7 +162,7 @@ JSON
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
       },
-      "loaded_language_ideological_slant": {
+      "no_loaded_language_or_ideological_slant": {
         "status": "Yes/No/N/A",
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
@@ -174,7 +174,7 @@ JSON
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
       },
-      "grammar_spelling_errors_present": {
+      "no_grammar_spelling_errors_present": {
         "status": "Yes/No/N/A",
         "explanation": "Brief explanation, list a few if present.",
         "examples_from_article": ["Example 1", "Example 2"]
@@ -218,24 +218,7 @@ JSON
         "explanation": "Brief explanation.",
         "examples_from_article": ["Example 1", "Example 2"]
       }
-    },
-    "social_signals": {
-      "comments_insightful_reactive": {
-        "status": "Yes/No/N/A",
-        "explanation": "Brief explanation.",
-        "examples_from_article": ["Example 1", "Example 2"]
-      },
-      "signs_of_coordinated_boosting": {
-        "status": "Yes/No/N/A",
-        "explanation": "Brief explanation.",
-        "examples_from_article": ["Example 1", "Example 2"]
-      },
-      "content_shared_without_validation": {
-        "status": "Yes/No/N/A",
-        "explanation": "Brief explanation.",
-        "examples_from_article": ["Example 1", "Example 2"]
-      }
-    }
+    }   
   },
   "overall_assessment": {
     "reliability": "[Overall reliability assessment, e.g., 'Highly Reliable', 'Moderately Reliable', 'Low Reliability', 'Unreliable']",
@@ -328,64 +311,128 @@ Article to Analyze: ${articleContent}`;
     
     function renderTabularEvaluation(data) {
         if (!data) return "<div>No data to display.</div>";
+        let reliability = (data.overall_assessment?.reliability || "N/A").toUpperCase();
+        let face = "🤖";
+        let statusColor = "#6b7280";
+        let statusText = reliability;
+        if (reliability.includes("HIGH")) { face = "🟢"; statusColor = "#22c55e"; statusText = data.overall_assessment?.reliability || "Highly Reliable"; }
+        else if (reliability.includes("MODERATE")) { face = "🟡"; statusColor = "#eab308"; statusText = data.overall_assessment?.reliability || "Moderately Reliable"; }
+        else if (reliability.includes("LOW")) { face = "🔴"; statusColor = "#ef4444"; statusText = data.overall_assessment?.reliability || "Low Reliability"; }
+        else if (reliability.includes("UNRELIABLE")) { face = "⚫"; statusColor = "#374151"; statusText = data.overall_assessment?.reliability || "Unreliable"; }
+        else if (reliability === "N/A") { face = "⚪"; statusColor = "#9ca3af"; statusText = "N/A"; }
+        let recommendations = (data.overall_assessment?.recommendations || []);
         let html = `
             <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 class="text-lg font-bold text-blue-700 mb-2">${data.article_title || "Untitled Article"}</h3>
                 <div class="text-sm text-gray-600 mb-2">Evaluated: ${data.evaluation_date || ""}</div>
                 <h4 class="font-semibold text-blue-600 mt-3 mb-1">Overall Assessment</h4>
-                <table class="min-w-full mb-3 text-sm">
-                    <tr>
-                        <td class="font-semibold pr-2">Reliability:</td>
-                        <td>${data.overall_assessment?.reliability || ""}</td>
-                    </tr>
-                    <tr>
-                        <td class="font-semibold pr-2 align-top">Recommendations:</td>
-                        <td>
-                            <ul class="list-disc ml-6">
-                                ${(data.overall_assessment?.recommendations || []).map(r => `<li>${r}</li>`).join("")}
-                            </ul>
-                        </td>
-                    </tr>
-                </table>
+                <div style="margin-bottom:1.5em;">
+                    <div class="robot-card" style="min-width:180px;max-width:260px;">
+                        <div class="robot-face" style="color:${statusColor}">${face}</div>
+                        <div class="robot-criterion">Reliability</div>
+                        <div class="robot-status" style="color:${statusColor}">${statusText}</div>
+                        <div class="robot-tooltip">
+                            <div><b>Recommendations:</b><ul style="margin:0 0 0 1.2em; padding:0;">${recommendations.map(r => `<li>${r}</li>`).join("")}</ul></div>
+                        </div>
+                    </div>
+                </div>
                 <h4 class="font-semibold text-blue-600 mt-3 mb-1">Criteria Evaluation</h4>
-                ${renderCriteriaTables(data.criteria_evaluation)}
+                ${renderCriteriaRobotCards(data.criteria_evaluation)}
             </div>
+            <style>
+            .robot-card {
+                display: inline-block;
+                background: #f3f6fa;
+                border: 2px solid #d1d5db;
+                border-radius: 16px;
+                margin: 8px 8px 16px 0;
+                padding: 16px 12px 10px 12px;
+                min-width: 120px;
+                max-width: 180px;
+                vertical-align: top;
+                text-align: center;
+                box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+                position: relative;
+                transition: box-shadow 0.2s;
+            }
+            .robot-card:hover {
+                box-shadow: 0 4px 16px 0 rgba(0,0,0,0.10);
+            }
+            .robot-face {
+                font-size: 2.2em;
+                margin-bottom: 0.2em;
+            }
+            .robot-status {
+                font-size: 1.1em;
+                font-weight: bold;
+                margin-bottom: 0.2em;
+            }
+            .robot-criterion {
+                font-size: 0.98em;
+                font-weight: 500;
+                margin-bottom: 0.2em;
+            }
+            .robot-tooltip {
+                visibility: hidden;
+                width: 260px;
+                background: #222;
+                color: #fff;
+                text-align: left;
+                border-radius: 8px;
+                padding: 10px 14px;
+                position: absolute;
+                z-index: 10;
+                left: 50%;
+                top: 110%;
+                transform: translateX(-50%);
+                opacity: 0;
+                transition: opacity 0.2s;
+                font-size: 0.93em;
+                box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+            }
+            .robot-card:hover .robot-tooltip {
+                visibility: visible;
+                opacity: 1;
+            }
+            .robot-section-title {
+                font-size: 1.08em;
+                font-weight: 600;
+                color: #2563eb;
+                margin: 18px 0 8px 0;
+                letter-spacing: 0.01em;
+            }
+            </style>
         `;
         return html;
     }
 
-    function renderCriteriaTables(criteria) {
+    function renderCriteriaRobotCards(criteria) {
         if (!criteria) return "";
         let html = "";
         for (const [section, sectionObj] of Object.entries(criteria)) {
-            html += `<div class="mb-4">
-                <div class="font-semibold text-gray-700 mb-1">${section.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
-                <table class="min-w-full text-xs border mb-2">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-1 border">Criterion</th>
-                            <th class="p-1 border">Status</th>
-                            <th class="p-1 border">Explanation</th>
-                            <th class="p-1 border">Examples</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            html += `<div class="robot-section-title">${section.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>`;
+            html += `<div style="display:flex; flex-wrap:wrap; gap:8px 0;">`;
             for (const [criterion, critObj] of Object.entries(sectionObj)) {
+                let status = (critObj.status || "N/A").toUpperCase();
+                let face = "🤖";
+                let statusColor = "#6b7280";
+                let statusText = status;
+                if (status === "YES") { face = "🟢"; statusColor = "#22c55e"; statusText = "Yes"; }
+                else if (status === "NO") { face = "🔴"; statusColor = "#ef4444"; statusText = "No"; }
+                else if (status === "N/A") { face = "⚪"; statusColor = "#9ca3af"; statusText = "N/A"; }
                 html += `
-                    <tr>
-                        <td class="border p-1 font-medium">${criterion.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</td>
-                        <td class="border p-1">${critObj.status || ""}</td>
-                        <td class="border p-1">${critObj.explanation || ""}</td>
-                        <td class="border p-1">
-                            <ul class="list-disc ml-4">
-                                ${(critObj.examples_from_article || []).map(e => `<li>${e}</li>`).join("")}
-                            </ul>
-                        </td>
-                    </tr>
+                    <div class="robot-card">
+                        <div class="robot-face" style="color:${statusColor}">${face}</div>
+                        <div class="robot-criterion">${criterion.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
+                        <div class="robot-status" style="color:${statusColor}">${statusText}</div>
+                        <div class="robot-tooltip">
+                            <div><b>Explanation:</b> ${critObj.explanation || "<i>No explanation.</i>"}</div>
+                            <div style="margin-top:0.5em;"><b>Examples:</b><ul style="margin:0 0 0 1.2em; padding:0;">${(critObj.examples_from_article || []).map(e => `<li>${e}</li>`).join("")}</ul></div>
+                        </div>
+                    </div>
                 `;
             }
-            html += `</tbody></table></div>`;
+            html += `</div>`;
         }
         return html;
     }

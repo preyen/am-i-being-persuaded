@@ -6,62 +6,44 @@
     function getArticleContent() {
         let content = '';
         let title = document.querySelector('h1')?.innerText || document.title;
-        content += `Title: ${title}\n\n`;
+        content += `Title: ${title}\n`;
+        content += `URL: ${window.location.href}\n\n`;
 
-        // Attempt to find the main article element
-        const articleElement = document.querySelector('article') ||
-                               document.querySelector('main') ||
-                               document.getElementById('content') ||
-                               document.querySelector('.article-body') ||
-                               document.querySelector('.post-content');
-
-        if (articleElement) {
-            // If a specific article element is found, try to extract paragraphs and headings
-            const paragraphs = articleElement.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li');
-            paragraphs.forEach(p => {
-                // Filter out elements that are likely not part of the main text
-                if (p.offsetParent !== null && // Check if element is visible
-                    !p.closest('header') &&
-                    !p.closest('footer') &&
-                    !p.closest('nav') &&
-                    !p.closest('aside') &&
-                    !p.closest('.sidebar') &&
-                    !p.closest('.comments') &&
-                    !p.closest('.related-articles') &&
-                    !p.closest('.advertisement') &&
-                    !p.closest('.meta-info') &&
-                    !p.classList.contains('caption') && // Exclude image captions
-                    p.innerText.trim().length > 10 // Only include substantial text
-                ) {
-                    content += p.innerText.trim() + '\n\n';
+        // Get all visible text nodes
+        function getAllVisibleText() {
+            let walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+                acceptNode: function(node) {
+                    if (!node.parentElement) return NodeFilter.FILTER_REJECT;
+                    const style = window.getComputedStyle(node.parentElement);
+                    if (style && (style.visibility === 'hidden' || style.display === 'none')) return NodeFilter.FILTER_REJECT;
+                    if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
                 }
             });
-        } else {
-            // Fallback: if no specific article element, try to get all paragraphs
-            const allParagraphs = document.querySelectorAll('p');
-            allParagraphs.forEach(p => {
-                if (p.offsetParent !== null && p.innerText.trim().length > 10) {
-                    content += p.innerText.trim() + '\n\n';
+            let text = '';
+            let node;
+            while (node = walker.nextNode()) {
+                text += node.nodeValue.trim() + '\n';
+            }
+            return text;
+        }
+
+        // Get all image alt text
+        function getAllAltText() {
+            const images = document.querySelectorAll('img[alt]');
+            let altTexts = [];
+            images.forEach(img => {
+                if (img.alt && img.alt.trim().length > 0) {
+                    altTexts.push(img.alt.trim());
                 }
             });
+            return altTexts.length ? ('\nImage Alt Texts:\n' + altTexts.join('\n')) : '';
         }
 
-        // Add publication date if found
-        const dateElement = document.querySelector('time[datetime], .pub-date, .date');
-        if (dateElement && dateElement.innerText.trim()) {
-            content += `\nPublished Date: ${dateElement.innerText.trim()}\n`;
-        }
+        content += getAllVisibleText();
+        content += getAllAltText();
 
-        // Add author if found
-        const authorElement = document.querySelector('.author, .byline, [rel="author"]');
-        if (authorElement && authorElement.innerText.trim()) {
-            content += `\nAuthor: ${authorElement.innerText.trim()}\n`;
-        }
-
-        // Clean up excessive newlines
-        content = content.replace(/\n\n\n+/g, '\n\n').trim();
-
-        return content;
+        return content.trim();
     }
 
     // Return the scraped content. This will be the result of executeScript.
