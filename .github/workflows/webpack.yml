@@ -1,0 +1,42 @@
+# .github/workflows/webpack-build.yml
+
+name: Webpack Build for Chrome Extension
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+  workflow_dispatch: # Allow manual triggering from the GitHub Actions UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Action to check out your repository code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Specify the Node.js version you want to use
+
+      - name: Install Dependencies
+        run: npm install # Install all project dependencies from package.json
+
+      - name: Run Webpack Build
+        # This assumes you have a "build" script in your package.json
+        # (e.g., "scripts": { "build": "webpack --mode production" })
+        # If you don't, replace "npm run build" with "npx webpack --mode production"
+        run: npm run build
+
+      - name: Upload Built Extension Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-build # Name of the artifact
+          path: dist/ # The directory where Webpack outputs your compiled extension
+          # Adjust 'dist/' if your webpack output directory is different (e.g., 'build/')
+          retention-days: 7 # How long to keep the artifact (optional)
+
+      - name: Display Build Success Message
+        run: echo "Webpack build completed successfully and artifact uploaded!"
